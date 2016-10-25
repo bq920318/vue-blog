@@ -5,10 +5,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    count: 0
+    count: 0,
+    articls: []
   },
   getters: {
-    count: (state) => state.count
+    count: (state) => state.count,
+    articles: (state) => state.articles
   },
   actions: {
     inc_count ({commit}) {
