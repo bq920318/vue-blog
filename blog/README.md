@@ -28,4 +28,4 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 
 > 最初的vue-cli init文件
 
-> cnpm install --save-dev vue-router, vue-resource, vuex
+> cnpm install --save-dev : vue-router, vue-resource, vuex
