@@ -6,11 +6,13 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     count: 0,
-    articls: []
+    articls: [],
+    canBack: false
   },
   getters: {
     count: (state) => state.count,
-    articles: (state) => state.articles
+    articles: (state) => state.articles,
+    canBack: (state) => state.canBack
   },
   actions: {
     inc_count ({commit}) {
