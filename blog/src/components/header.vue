@@ -5,7 +5,7 @@
     返回
   </a>
   <h1 class="title">
-    我的博客
+    我的生活
   </h1>
   <a class="button button-fill button-nav pull-right" data-transition="slide-out">
     <span class="icon icon-search"></span>

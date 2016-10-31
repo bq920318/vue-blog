@@ -1,6 +1,6 @@
 <template>
 <nav class="bar bar-tab">
-  <router-link class="tab-item" to="/" exact active-class="active" external>
+  <router-link class="tab-item" to="/home" exact active-class="active" external>
     <span class="icon icon-home"></span>
     <span class="tab-label">首页</span>
   </router-link>

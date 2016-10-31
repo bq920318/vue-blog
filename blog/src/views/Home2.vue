@@ -1,9 +1,10 @@
 <template>
-  <div class="content infinite-scroll infinite-scroll-preloader" data-distance="100">
-    <div class="list-block">
-        <ul class="list-container">
-        </ul>
-    </div>
+<div class="content infinite-scroll infinite-scroll-bottom" data-distance="100">
+    <router-link tag="div" class="card" v-for="i in lists" :to="{path: '/details/' + i}">
+      <div class="card-header">项目{{i}}</div>
+      <div class="card-content"><div class="card-content-inner">内容{{i}}</div></div>
+      <div class="card-footer">2016-10-{{i % 31}}</div>
+    </router-link>
           <!-- 加载提示符 -->
     <div class="infinite-scroll-preloader">
         <div class="preloader"></div>
@@ -12,42 +13,56 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
-  mounted () {
-    var loading = false
-    var maxItems = 20
-    var itemsPerload = 5
-    addItems(itemsPerload, 0)
-    // test
-    function addItems (number, lastIndex) {
-      var html = ''
-      for (let i = lastIndex + 1; i <= lastIndex + number; i++) {
-        html += '<li class="item-content"><div class="item-inner"><div class="item-title">Item' + i + '</div></div></li>'
-      }
-      window.$('.infinite-scroll-bottom .list-container').append(html)
+  data () {
+    return {
+      lists: 0
     }
-    // s
-    addItems(itemsPerload, 0)
-    var lastIndex = 5
-    window.$(document).on('infinite', '.infinite-scroll-bottom', () => {
+  },
+  methods: {
+    getList: function () {
+      this.$http.get('/index.html').then((response) => {
+        console.log(response.data)
+      })
+    },
+    ...mapActions(['load_articles'])
+  },
+  mounted () {
+    this.getList()
+    // 调用zepto.js
+    let $ = window.$
+    // 使用self 替代 vue
+    let self = this
+    // $.detachInfiniteScroll($('.infinite-scroll'))
+    // $.attachInfiniteScroll($('.infinite-scroll'))
+    let loading = false
+    let itemsPerload = 20
+    let maxItems = 100
+    let lastIndex = 0
+    let addItems = (itemsCount, lastIndex) => {
+      self.lists = lastIndex + itemsCount
+    }
+    // 初始化添加元素
+    addItems(itemsPerload, lastIndex)
+    lastIndex = itemsPerload
+    $('.infinite-scroll-bottom').on('infinite', (e) => {
       if (loading) {
         return
       }
       loading = true
       setTimeout(() => {
+        // 重置flag
         loading = false
-
         if (lastIndex >= maxItems) {
-          window.$.detachInfiniteScroll(window.$('.infinite-scroll'))
-          window.$('.infinite-scroll-preloader').remove()
+          $.detachInfiniteScroll($('.infinite-scroll'))
+          $('.infinite-scroll-preloader').remove()
+          $.toast('已加载所有数据。', 2345, 'finished')
           return
         }
-
         addItems(itemsPerload, lastIndex)
-
-        lastIndex = window.$('.list-container li').length
-        console.log(lastIndex)
-        window.$.refreshScroller()
+        lastIndex = self.lists
+        $.refreshScroller()
       }, 1000)
     })
   }
@@ -56,6 +71,10 @@ export default {
 
 <style>
 .infinite-scroll-preloader {
-	margin-top: -1rem;
+}
+.infinite-scroll{
+}
+.finished {
+  background: blue;
 }
 </style>
