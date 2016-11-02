@@ -1,9 +1,9 @@
 <template>
 <div class="content infinite-scroll infinite-scroll-bottom" data-distance="100">
-    <router-link tag="div" class="card" v-for="i in lists" :to="{path: '/details/' + i}">
-      <div class="card-header">项目{{i}}</div>
-      <div class="card-content"><div class="card-content-inner">内容{{i}}</div></div>
-      <div class="card-footer">2016-10-{{i % 31}}</div>
+    <router-link tag="div" class="card" v-for="i in articles" :to="{path: '/details/' + i.id}">
+      <div class="card-header">{{i.title}}</div>
+      <div class="card-content"><div class="card-content-inner">{{i.content}}</div></div>
+      <div class="card-footer">{{i.pubtime}}</div>
     </router-link>
           <!-- 加载提示符 -->
     <div class="infinite-scroll-preloader">
@@ -13,35 +13,42 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 export default {
   data () {
     return {
       lists: 0
     }
   },
+  computed: {
+    ...mapGetters(['canLoadArticles', 'articles'])
+  },
   methods: {
-    getList: function () {
-      this.$http.get('/index.html').then((response) => {
-        console.log(response.data)
+    ...mapActions(['load_articles', 'toggleLoadArticles', 'appendArticles'])
+  },
+  created () {
+    if (this.canLoadArticles) {
+      this.toggleLoadArticles()
+      let self = this
+      this.$http.get('/api/getList.php', {params: {pageno: 1}}).then((res) => {
+        let data = JSON.parse(res.body)
+        self.appendArticles(data)
       })
-    },
-    ...mapActions(['load_articles'])
+    }
   },
   mounted () {
-    this.getList()
     // 调用zepto.js
     let $ = window.$
     // 使用self 替代 vue
     let self = this
-    // $.detachInfiniteScroll($('.infinite-scroll'))
-    // $.attachInfiniteScroll($('.infinite-scroll'))
     let loading = false
     let itemsPerload = 20
     let maxItems = 100
     let lastIndex = 0
     let addItems = (itemsCount, lastIndex) => {
-      self.lists = lastIndex + itemsCount
+      this.$http.get('/api/getList.php', {params: {pageno: 2}}).then((data) => {
+        console.log(data.body)
+      })
     }
     // 初始化添加元素
     addItems(itemsPerload, lastIndex)

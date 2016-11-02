@@ -5,7 +5,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     count: 0,
-    articls: [],
+    articles: [],
+    loadArticles: true,
     canBack: false,
     showNav: true
   },
@@ -13,6 +14,7 @@ export default new Vuex.Store({
     count: (state) => state.count,
     articles: (state) => state.articles,
     canBack: (state) => state.canBack,
+    canLoadArticles: (state) => state.loadArticles,
     showNav: (state) => state.showNav
   },
   actions: {
@@ -22,8 +24,14 @@ export default new Vuex.Store({
     toggle_nav ({commit}) {
       commit('TOGGLE_NAV')
     },
-    load_articles ({commit}) {
-      commit('LOAD_ARTICLES')
+    load_articles ({commit}, data) {
+      commit('LOAD_ARTICLES', data)
+    },
+    toggleLoadArticles ({commit}) {
+      commit('TOGGLE_LOAD_ARTICLES')
+    },
+    appendArticles ({commit}, data) {
+      commit('SET_ARTICLES', data)
     }
   },
   mutations: {
@@ -33,7 +41,16 @@ export default new Vuex.Store({
     TOGGLE_NAV (state) {
       state.showNav = !state.showNav
     },
-    LOAD_ARTICLES (state) {
+    LOAD_ARTICLES (state, data) {
+    },
+    CAN_LOAD_ARTICLES (state) {
+      state.loadArticles = !state.loadArticles
+    },
+    TOGGLE_LOAD_ARTICLES (state) {
+      state.loadArticles = !state.loadArticles
+    },
+    SET_ARTICLES (state, data) {
+      state.articles = state.articles.concat(data)
     }
   }
 })
