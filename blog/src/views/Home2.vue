@@ -47,7 +47,7 @@ export default {
     let lastIndex = 0
     let addItems = (itemsCount, lastIndex) => {
       this.$http.get('/api/getList.php', {params: {pageno: 2}}).then((data) => {
-        console.log(data.body)
+        self.appendArticles(JSON.parse(data.body))
       })
     }
     // 初始化添加元素
